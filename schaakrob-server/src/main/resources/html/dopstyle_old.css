@@ -1,0 +1,82 @@
+html {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 40px;
+  font-weight: normal;
+  color: white;
+  margin-bottom: 0px;
+}
+
+body {
+  font-size: 14px;
+  background-image: linear-gradient(#49b1ff, #8bd0ff, #49b1ff);
+  font-family: 'Titillium Web', sans-serif;
+  color: white;
+}
+
+div {
+  font-size: 14px;
+}
+
+button {
+  background-image: linear-gradient(#068eff, #49b1ff, #068eff);
+  border: none;
+  color: white;
+  padding: 16px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  width: 200px;
+  height: 3em;
+}
+
+th, td {
+  padding-right: 15px;
+  text-align: left;
+}
+
+a:link {
+  color: white;
+}
+a:visited {
+  color: white;
+}
+a:hover {
+  color: white;
+}
+a:active {
+  color: white;
+}
+
+textarea {
+    width:100%;
+}
+
+.textwrapper {
+    border:1px solid #999999;
+    margin:5px 0;
+    padding:3px;
+}
+
+p.hidden {
+    display: none;
+}
+
+.pretty-table .sticky > tr > th {
+  position: sticky;
+  top: 0;
+}
+
+.pretty-table tr > th {
+  background-color: #068eff;
+}
+
+.pretty-table tr:nth-child(even) { background-color: #49b1ff }
+.pretty-table tr:nth-child(odd) { background-color: #8bd0ff }
