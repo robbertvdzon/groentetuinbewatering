@@ -50,57 +50,57 @@ class RobotAansturingImpl() : RobotAansturing {
     private var currentLoopThread: Thread? = null
 
     fun init() {
-
-        if (arm1 != null) {
-            return
-        }
-
-        var initialized = false
-        while (!initialized ) {
-            val display = Display(this)
-            display.startDisplay()
-
-            try {
-                log.info("Open devices")
-                val i2c = I2CFactory.getInstance(I2CBus.BUS_1)
-                arm1 = i2c.getDevice(ARM1)
-                arm2 = i2c.getDevice(ARM2)
-                arm3 = i2c.getDevice(ARM3)
-                // test connectoe
-                arm1!!.readI2c("arm1")
-                arm2!!.readI2c("arm2")
-                arm3!!.readI2c("arm3")
-
-
-
-                initialized = true
-            } catch (e: UnsupportedBusNumberException) {
-                log.info("ERROR, UnsupportedBusNumberException in init")
-                Thread.sleep(2000)
-            } catch (e: IOException) {
-                log.info("ERROR IOException in init:" + e.message)
-                Thread.sleep(2000)
-            }
-        }
-
-        log.info("Devices found")
-
-        thread {
-            println("start check sleep thread")
-            while (true){
-//                val res = arm1!!.readI2c("arm1")
-//                println("arm1 state="+res)
-//                Thread.sleep(1000)
-                Thread.sleep(3000)
-                val timeout = System.currentTimeMillis() - 1000*20 // 20 seconds
-                val bothHome = bothArmsAtHome()
-                val hasTimeout = lastMovement<timeout
-                if (bothHome && hasTimeout){
-                    println("automatically sleep!")
-                    sleep()
-                }
-            }
-        }
+//
+//        if (arm1 != null) {
+//            return
+//        }
+//
+//        var initialized = false
+//        while (!initialized ) {
+//            val display = Display(this)
+//            display.startDisplay()
+//
+//            try {
+//                log.info("Open devices")
+//                val i2c = I2CFactory.getInstance(I2CBus.BUS_1)
+//                arm1 = i2c.getDevice(ARM1)
+//                arm2 = i2c.getDevice(ARM2)
+//                arm3 = i2c.getDevice(ARM3)
+//                // test connectoe
+//                arm1!!.readI2c("arm1")
+//                arm2!!.readI2c("arm2")
+//                arm3!!.readI2c("arm3")
+//
+//
+//
+//                initialized = true
+//            } catch (e: UnsupportedBusNumberException) {
+//                log.info("ERROR, UnsupportedBusNumberException in init")
+//                Thread.sleep(2000)
+//            } catch (e: IOException) {
+//                log.info("ERROR IOException in init:" + e.message)
+//                Thread.sleep(2000)
+//            }
+//        }
+//
+//        log.info("Devices found")
+//
+//        thread {
+//            println("start check sleep thread")
+//            while (true){
+////                val res = arm1!!.readI2c("arm1")
+////                println("arm1 state="+res)
+////                Thread.sleep(1000)
+//                Thread.sleep(3000)
+//                val timeout = System.currentTimeMillis() - 1000*20 // 20 seconds
+//                val bothHome = bothArmsAtHome()
+//                val hasTimeout = lastMovement<timeout
+//                if (bothHome && hasTimeout){
+//                    println("automatically sleep!")
+//                    sleep()
+//                }
+//            }
+//        }
 
 
 
@@ -292,7 +292,7 @@ class RobotAansturingImpl() : RobotAansturing {
 
     override fun bootsound() {
         log.info("bootsound")
-        arm1!!.writeI2c("^B0000000000000000".toByteArray(),"arm3")
+//        arm1!!.writeI2c("^B0000000000000000".toByteArray(),"arm3")
     }
 
 
