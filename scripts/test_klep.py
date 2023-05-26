@@ -21,7 +21,7 @@ GPIO.setup(17, GPIO.OUT) # richting
 GPIO.output(12, GPIO.HIGH)
 
 open(self, FULL_TIME)
-time.sleep(1)
+time.sleep(5)
 close(self, FULL_TIME)
 
 
