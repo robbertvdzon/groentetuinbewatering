@@ -20,28 +20,28 @@ GPIO.setup(12, GPIO.OUT) # aan / uit
 GPIO.setup(17, GPIO.OUT) # richting
 GPIO.output(12, GPIO.HIGH)
 
-open(self, FULL_TIME)
+open(FULL_TIME)
 time.sleep(5)
-close(self, FULL_TIME)
+close(FULL_TIME)
 
 
 
-def open(self, time):
-    self.direction(self.DIRECTION_OPEN)
-    self.motorOn()
-    threading.Timer(time, self.motorOff).start()
+def open(time):
+    direction(DIRECTION_OPEN)
+    motorOn()
+    threading.Timer(time, motorOff).start()
 
-def close(self, time):
-    self.direction(self.DIRECTION_CLOSE)
-    self.motorOn()
-    threading.Timer(time, self.motorOff).start()
+def close(time):
+    direction(DIRECTION_CLOSE)
+    motorOn()
+    threading.Timer(time, motorOff).start()
 
-def motorOn(self):
+def motorOn():
     GPIO.output(12, GPIO.HIGH)
 
-def motorOff(self):
+def motorOff():
     GPIO.output(12, GPIO.LOW)
-    self.busy = False
+    busy = False
 
-def direction(self, direction):
+def direction( direction):
     GPIO.output(17, direction)
