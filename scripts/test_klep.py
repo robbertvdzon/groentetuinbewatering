@@ -20,9 +20,6 @@ GPIO.setup(12, GPIO.OUT) # aan / uit
 GPIO.setup(17, GPIO.OUT) # richting
 GPIO.output(12, GPIO.HIGH)
 
-open(FULL_TIME)
-time.sleep(5)
-close(FULL_TIME)
 
 
 
@@ -45,3 +42,7 @@ def motorOff():
 
 def direction( direction):
     GPIO.output(17, direction)
+
+close(FULL_TIME)
+time.sleep(5)
+open(FULL_TIME)
