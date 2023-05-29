@@ -131,9 +131,9 @@ class LcdDisplay : Component {
     fun displayText(text: String, line: Int) {
         require(text.length <= columns) { "Too long text. Only $columns characters possible" }
         require(!(line > rows || line < 1)) { "Wrong line id. Only $rows lines possible" }
-        clearLine(line)
+//        clearLine(line)
         moveCursorHome()
-        displayLine(text, LCD_ROW_OFFSETS[line - 1].toInt())
+        displayLine(text.padEnd(columns,' '), LCD_ROW_OFFSETS[line - 1].toInt())
     }
 
     /**
