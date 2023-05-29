@@ -21,29 +21,14 @@ class MainWeb {
             config.accessManager(this::accessManager)
         }
         app!!.get("/", VueComponent("<play></play>"))
-//        app!!.get("/play", VueComponent("<play></play>"), setOf(RouteRole.SPECTATOR))
-//        app!!.get("/manual", VueComponent("<manual></manual>"), setOf(RouteRole.ADMIN))
-        app!!.get("/admin", VueComponent("<rebuild></rebuild>"), setOf(RouteRole.ADMIN))
+        app!!.get("/play", VueComponent("<play></play>"), setOf(RouteRole.SPECTATOR))
         app!!.get("/login", VueComponent("<login></login>"), setOf(RouteRole.SPECTATOR))
         app!!.post("/api/login", { ctx: Context ->  login(ctx)})
         app!!.get("/api/logout", { ctx: Context ->  logout(ctx)})
         app!!.get("/api/userdata", { ctx: Context ->  ctx?.json(getUserData(ctx))})
 
-//        var robotAansturing: RobotAansturing? = null
-//        robotAansturing = if (schaakbord) {
-//            RobotAansturingImpl()
-//        } else {
-//            RobotAansturingClient("http://192.168.178.88:8080")
-//        }
-//        val schaakspel = Schaakspel(robotAansturing)
-//
-//        if (robotAansturing is RobotAansturingImpl){
-//            robotAansturing.setSchaakspel(schaakspel) // deze dependency op betere manier oplossen
-//        }
-//
-//        RestEndpoints().initRestEndpoints(app, robotAansturing, schaakspel)
+        RestEndpoints().initRestEndpoints(app!!)
         log.info("Starting server")
-//        robotAansturing.bootsound()
         app!!.start(8080)
     }
 
