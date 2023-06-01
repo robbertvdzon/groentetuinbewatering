@@ -56,9 +56,9 @@ class Controller(
 
     override fun encoderUp() {
         if (closeTime.isBefore(LocalDateTime.now())) {
-            closeTime = LocalDateTime.now().plusMinutes(1)
+            closeTime = LocalDateTime.now().plusSeconds(10)
         } else {
-            closeTime = closeTime.plusMinutes(1)
+            closeTime = closeTime.plusSeconds(10)
         }
         val time = closeTime.toString().substring(11, 16)
         hardware.updateTime(time)
@@ -66,9 +66,9 @@ class Controller(
 
     override fun encoderDown() {
         if (closeTime.isAfter(LocalDateTime.now())) {
-            closeTime = LocalDateTime.now().minusMinutes(1)
+            closeTime = LocalDateTime.now().minusSeconds(10)
         } else {
-            closeTime = closeTime.minusMinutes(1)
+            closeTime = closeTime.minusSeconds(10)
         }
         val time = closeTime.toString().substring(11, 16)
         hardware.updateTime(time)
@@ -105,7 +105,11 @@ class Controller(
         if (klepState== KlepState.CLOSED && closeTimeInFuture) {
             hardware.klepOpen()
         }
-        hardware.updateTime("$secondsRemainingUntilClose seconds")
+        if (closeTimeInFuture){
+            hardware.updateTime("$secondsRemainingUntilClose seconds")
+        }else{
+            hardware.updateTime("-")
+        }
 
     }
 

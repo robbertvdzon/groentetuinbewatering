@@ -55,14 +55,14 @@ class HardwareImpl : Hardware {
     override fun klepOpen() {
         Thread {
             println("klep open")
+            klepListener?.klepOpening()
             richting.high()
             aanUit.high()
             klepState = "opening"
-            displayThread?.interrupt()
             Thread.sleep(3000)
             klepState = "open"
-            displayThread?.interrupt()
             aanUit.low()
+            klepListener?.klepOpen()
             println("klep opened")
         }.start()
     }
@@ -70,14 +70,14 @@ class HardwareImpl : Hardware {
     override fun klepClose() {
         Thread {
             println("klep close")
+            klepListener?.klepClosing()
             richting.low()
             aanUit.high()
             klepState = "closing"
-            displayThread?.interrupt()
             Thread.sleep(3000)
             klepState = "closed"
-            displayThread?.interrupt()
             aanUit.low()
+            klepListener?.klepClosed()
             println("klep closed")
         }.start()
 
