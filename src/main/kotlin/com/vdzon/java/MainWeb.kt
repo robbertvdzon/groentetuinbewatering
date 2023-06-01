@@ -9,7 +9,7 @@ import io.javalin.http.Context
 
 import io.javalin.http.Handler
 
-class MainWeb {
+class MainWeb(val controller: Controller) {
     private val log = LoggerFactory.getLogger(MainWeb::class.java)
 
     var app: Javalin? = null
@@ -27,7 +27,7 @@ class MainWeb {
         app!!.get("/api/logout", { ctx: Context ->  logout(ctx)})
         app!!.get("/api/userdata", { ctx: Context ->  ctx?.json(getUserData(ctx))})
 
-        RestEndpoints().initRestEndpoints(app!!)
+        RestEndpoints(controller).initRestEndpoints(app!!)
         log.info("Starting server")
         app!!.start(8080)
     }
