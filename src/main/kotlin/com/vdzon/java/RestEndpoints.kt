@@ -18,12 +18,12 @@ class RestEndpoints(val controller: Controller) {
     }
 
     private fun min5(ctx: Context?) {
-        controller.klepClose()
+        controller.closeKlep()
         ctx?.json(GroentetuinStatus("klep status", "min 5"))
     }
 
     private fun plus5(ctx: Context?) {
-        controller.klepOpen()
+        controller.openKlep()
         ctx?.json(GroentetuinStatus("klep status", "plus 5"))
     }
 

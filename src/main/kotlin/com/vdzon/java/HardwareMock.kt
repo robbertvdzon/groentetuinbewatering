@@ -2,8 +2,9 @@ package com.vdzon.java
 
 
 class HardwareMock : Hardware {
-    private var encoderListener: encoderListener? = null
-    private var switchListener: switchListener? = null
+    private var encoderListener: EncoderListener? = null
+    private var switchListener: SwitchListener? = null
+    private var klepListener: KlepListener? = null
 
 
     override fun klepOpen() {
@@ -25,6 +26,10 @@ class HardwareMock : Hardware {
     override fun updateIP(ip: String) {
         println("ip: $ip")
     }
+    override fun updateKlepState(klepState: String){
+        println("klepState: $klepState")
+    }
+
 
     override fun encoderUp(){
         encoderListener?.encoderUp()
@@ -38,12 +43,16 @@ class HardwareMock : Hardware {
     override fun switchOff(){
         switchListener?.switchOff()
     }
-    override fun registerEncoderListener(encoderListener: encoderListener){
+    override fun registerEncoderListener(encoderListener: EncoderListener){
         this.encoderListener = encoderListener
     }
-    override fun registerSwitchListener(switchListener: switchListener){
+    override fun registerSwitchListener(switchListener: SwitchListener){
         this.switchListener = switchListener
     }
+    override fun registerKlepListener(klepListener: KlepListener){
+        this.klepListener = klepListener
+    }
+
 
 
 

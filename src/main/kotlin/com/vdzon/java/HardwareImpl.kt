@@ -36,8 +36,9 @@ class HardwareImpl: Hardware{
     var displayThread: Thread? = null
     var klepState: String = "?"
 
-    private var encoderListener: encoderListener? = null
-    private var switchListener: switchListener? = null
+    private var encoderListener: EncoderListener? = null
+    private var switchListener: SwitchListener? = null
+    private var klepListener: KlepListener? = null
 
     lateinit var pi4j: Context
     lateinit var displayController: DisplayController
@@ -92,29 +93,36 @@ class HardwareImpl: Hardware{
         displayThread?.interrupt()
     }
 
+    override fun updateKlepState(klepState: String){
+        displayController.displayData.klepState = klepState
+        displayThread?.interrupt()
+    }
+
+
     override fun encoderUp(){
         encoderListener?.encoderUp()
-        displayThread?.interrupt()
     }
     override fun encoderDown(){
         encoderListener?.encoderDown()
-        displayThread?.interrupt()
 
     }
     override fun switchOn(){
         switchListener?.switchOn()
-        displayThread?.interrupt()
     }
 
     override fun switchOff(){
         switchListener?.switchOff()
-        displayThread?.interrupt()
     }
-    override fun registerEncoderListener(encoderListener: encoderListener){
+
+
+    override fun registerEncoderListener(encoderListener: EncoderListener){
         this.encoderListener = encoderListener
     }
-    override fun registerSwitchListener(switchListener: switchListener){
+    override fun registerSwitchListener(switchListener: SwitchListener){
         this.switchListener = switchListener
+    }
+    override fun registerKlepListener(klepListener: KlepListener){
+        this.klepListener = klepListener
     }
 
     private fun switchChanged(state: DigitalState?) {
@@ -167,18 +175,32 @@ class HardwareImpl: Hardware{
             return result.toByte()
         }
 
-        var isOpen = false
+        var encoderValue = 0
+
+        fun encoderMicroUp(){
+            encoderValue++
+            if (encoderValue%4==0){
+                encoderUp()
+            }
+        }
+
+        fun encoderMicroDown(){
+            encoderValue--
+            if (encoderValue%4==0){
+                encoderDown()
+            }
+        }
 
         fun updateEncoder() {
-            if (byteCode.toInt() == 1 && newByteCode.toInt() == 3) encoderUp()
-            if (byteCode.toInt() == 3 && newByteCode.toInt() == 2) encoderUp()
-            if (byteCode.toInt() == 2 && newByteCode.toInt() == 0) encoderUp()
-            if (byteCode.toInt() == 0 && newByteCode.toInt() == 1) encoderUp()
+            if (byteCode.toInt() == 1 && newByteCode.toInt() == 3) encoderMicroUp()
+            if (byteCode.toInt() == 3 && newByteCode.toInt() == 2) encoderMicroUp()
+            if (byteCode.toInt() == 2 && newByteCode.toInt() == 0) encoderMicroUp()
+            if (byteCode.toInt() == 0 && newByteCode.toInt() == 1) encoderMicroUp()
 
-            if (byteCode.toInt() == 0 && newByteCode.toInt() == 2) encoderDown()
-            if (byteCode.toInt() == 2 && newByteCode.toInt() == 3) encoderDown()
-            if (byteCode.toInt() == 3 && newByteCode.toInt() == 1) encoderDown()
-            if (byteCode.toInt() == 1 && newByteCode.toInt() == 0) encoderDown()
+            if (byteCode.toInt() == 0 && newByteCode.toInt() == 2) encoderMicroDown()
+            if (byteCode.toInt() == 2 && newByteCode.toInt() == 3) encoderMicroDown()
+            if (byteCode.toInt() == 3 && newByteCode.toInt() == 1) encoderMicroDown()
+            if (byteCode.toInt() == 1 && newByteCode.toInt() == 0) encoderMicroDown()
             byteCode = newByteCode
         }
 
@@ -287,7 +309,6 @@ class HardwareImpl: Hardware{
 }
 
 class DisplayData(
-    var realValue: Int = 0,
     var manual: Boolean = false,
     var ip: String = "",
     var klepState: String ="",
@@ -310,13 +331,13 @@ class DisplayController(val lcd: LcdDisplay){
         lcd.displayText("ip: ${displayData.ip}", 1)
         lcd.displayText("klep: ${displayData.klepState}", 2)
         lcd.displayText("manual: ${displayData.manual}", 3)
-        lcd.displayText("val: ${displayData.realValue}", 4)
+        lcd.displayText("time: ${displayData.time}", 4)
         while (true) {
             sleep()
             lcd.displayText("ip: ${displayData.ip}", 1)
             lcd.displayText("klep: ${displayData.klepState}", 2)
             lcd.displayText("manual: ${displayData.manual}", 3)
-            lcd.displayText("val: ${displayData.realValue}", 4)
+            lcd.displayText("time: ${displayData.time}", 4)
         }
     }
 
