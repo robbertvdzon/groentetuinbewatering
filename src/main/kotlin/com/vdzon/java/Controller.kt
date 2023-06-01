@@ -1,21 +1,24 @@
 package com.vdzon.java
 
 import java.time.LocalDateTime
+import kotlin.concurrent.thread
 
 class Controller(
     val hardware: Hardware
 ) : EncoderListener, SwitchListener, KlepListener {
 
-    private var value = 0
-    private var realValue = 0
     private var manual: Boolean = false
-
-    private var ip: String = ""
+    private var klepState = KlepState.OPEN
     private var closeTime: LocalDateTime = LocalDateTime.now().minusDays(1)// in the past
 
     init {
         hardware.registerEncoderListener(this)
         hardware.registerSwitchListener(this)
+        thread(start = true) {
+            klepThreadThread()
+        }
+        hardware.updateAuto(manual)
+
     }
 
     fun setIp(ip: String) {
@@ -30,19 +33,23 @@ class Controller(
         hardware.klepClose()
     }
 
-    override fun klepOpening(){
-     hardware.updateKlepState("opening")
+    override fun klepOpening() {
+        klepState= KlepState.OPENING
+        hardware.updateKlepState("opening")
     }
 
-    override fun klepOpen(){
+    override fun klepOpen() {
+        klepState= KlepState.OPEN
         hardware.updateKlepState("open")
     }
 
-    override fun klepClosing(){
+    override fun klepClosing() {
+        klepState= KlepState.CLOSING
         hardware.updateKlepState("closing")
     }
 
-    override fun klepClosed(){
+    override fun klepClosed() {
+        klepState= KlepState.CLOSED
         hardware.updateKlepState("closed")
     }
 
@@ -69,13 +76,51 @@ class Controller(
 
     override fun switchOn() {
         manual = true
-        hardware.updateAuto(false)
+        hardware.updateAuto(manual)
     }
 
     override fun switchOff() {
         manual = false
-        hardware.updateAuto(true)
+        hardware.updateAuto(manual)
     }
 
 
+
+    fun klepThreadThread() {
+        checkKlep()
+        while (true) {
+            sleep()
+            checkKlep()
+        }
+    }
+
+    private fun checkKlep() {
+        val currentTime = LocalDateTime.now()
+        val secondsRemainingUntilClose = currentTime.until(closeTime, java.time.temporal.ChronoUnit.SECONDS)
+        val closeTimeInFuture = secondsRemainingUntilClose>0
+        val closeTimeInPast = !closeTimeInFuture
+        if (klepState== KlepState.OPEN  && closeTimeInPast) {
+            hardware.klepClose()
+        }
+        if (klepState== KlepState.CLOSED && closeTimeInFuture) {
+            hardware.klepOpen()
+        }
+        hardware.updateTime("$secondsRemainingUntilClose seconds")
+
+    }
+
+    private fun sleep() {
+        try {
+            Thread.sleep(1000)
+        } catch (e: InterruptedException) {
+        }
+    }
+
+
+}
+
+
+
+enum class KlepState {
+    OPEN, CLOSED, OPENING, CLOSING
 }

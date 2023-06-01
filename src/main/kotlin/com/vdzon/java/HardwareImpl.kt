@@ -23,7 +23,7 @@ import com.pi4j.util.Console
 import kotlin.concurrent.thread
 
 
-class HardwareImpl: Hardware{
+class HardwareImpl : Hardware {
 
     companion object {
         private const val PIN_BUTTON = 6
@@ -48,34 +48,39 @@ class HardwareImpl: Hardware{
     lateinit var encoder1: DigitalInput
     lateinit var encoder2: DigitalInput
 
-    init{
+    init {
         initHardware()
     }
 
     override fun klepOpen() {
-        println("klep open")
-        richting.high()
-        aanUit.high()
-        klepState = "opening"
-        displayThread?.interrupt()
-        Thread.sleep(3000)
-        klepState = "open"
-        displayThread?.interrupt()
-        aanUit.low()
-        println("klep opened")
+        Thread {
+            println("klep open")
+            richting.high()
+            aanUit.high()
+            klepState = "opening"
+            displayThread?.interrupt()
+            Thread.sleep(3000)
+            klepState = "open"
+            displayThread?.interrupt()
+            aanUit.low()
+            println("klep opened")
+        }.start()
     }
 
     override fun klepClose() {
-        println("klep close")
-        richting.low()
-        aanUit.high()
-        klepState = "closing"
-        displayThread?.interrupt()
-        Thread.sleep(3000)
-        klepState = "closed"
-        displayThread?.interrupt()
-        aanUit.low()
-        println("klep closed")
+        Thread {
+            println("klep close")
+            richting.low()
+            aanUit.high()
+            klepState = "closing"
+            displayThread?.interrupt()
+            Thread.sleep(3000)
+            klepState = "closed"
+            displayThread?.interrupt()
+            aanUit.low()
+            println("klep closed")
+        }.start()
+
     }
 
     override fun updateTime(time: String) {
@@ -93,40 +98,44 @@ class HardwareImpl: Hardware{
         displayThread?.interrupt()
     }
 
-    override fun updateKlepState(klepState: String){
+    override fun updateKlepState(klepState: String) {
         displayController.displayData.klepState = klepState
         displayThread?.interrupt()
     }
 
 
-    override fun encoderUp(){
+    override fun encoderUp() {
         encoderListener?.encoderUp()
     }
-    override fun encoderDown(){
+
+    override fun encoderDown() {
         encoderListener?.encoderDown()
 
     }
-    override fun switchOn(){
+
+    override fun switchOn() {
         switchListener?.switchOn()
     }
 
-    override fun switchOff(){
+    override fun switchOff() {
         switchListener?.switchOff()
     }
 
 
-    override fun registerEncoderListener(encoderListener: EncoderListener){
+    override fun registerEncoderListener(encoderListener: EncoderListener) {
         this.encoderListener = encoderListener
     }
-    override fun registerSwitchListener(switchListener: SwitchListener){
+
+    override fun registerSwitchListener(switchListener: SwitchListener) {
         this.switchListener = switchListener
     }
-    override fun registerKlepListener(klepListener: KlepListener){
+
+    override fun registerKlepListener(klepListener: KlepListener) {
         this.klepListener = klepListener
     }
 
     private fun switchChanged(state: DigitalState?) {
-        if (state === DigitalState.LOW) switchOn () else switchOff()
+        if (state === DigitalState.LOW) switchOn() else switchOff()
     }
 
 
@@ -177,16 +186,16 @@ class HardwareImpl: Hardware{
 
         var encoderValue = 0
 
-        fun encoderMicroUp(){
+        fun encoderMicroUp() {
             encoderValue++
-            if (encoderValue%4==0){
+            if (encoderValue % 4 == 0) {
                 encoderUp()
             }
         }
 
-        fun encoderMicroDown(){
+        fun encoderMicroDown() {
             encoderValue--
-            if (encoderValue%4==0){
+            if (encoderValue % 4 == 0) {
                 encoderDown()
             }
         }
@@ -311,12 +320,12 @@ class HardwareImpl: Hardware{
 class DisplayData(
     var manual: Boolean = false,
     var ip: String = "",
-    var klepState: String ="",
-    var time: String =""
+    var klepState: String = "",
+    var time: String = ""
 
 )
 
-class DisplayController(val lcd: LcdDisplay){
+class DisplayController(val lcd: LcdDisplay) {
 
     val displayData = DisplayData()
 
