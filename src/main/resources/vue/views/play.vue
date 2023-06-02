@@ -52,12 +52,11 @@
             <div class="headerBorder">
                 <table width=100%>
                     <tr height="50px">
-                        <td>
-                            &nbsp;
-                            <span v-if="userdata.role!='ADMIN'">
+                        <td>&nbsp;
+              <span v-if="userdata.role!='ADMIN'">
                 <button type="submit" v-on:click="login" class="button">Login</button>
               </span>
-                            <span v-if="userdata.role=='ADMIN'">
+              <span v-if="userdata.role=='ADMIN'">
                 <button v-on:click="logout" class="button">Logout</button>
               </span>
                         </td>
@@ -65,18 +64,14 @@
                 </table>
 
             </div>
-
-
             <br>
-
-            <!--
-                  <iframe width="640" height="480" src="https://rtsp.me/embed/8HkH3QT8/" frameborder="0" allowfullscreen></iframe>
-            -->
             <span v-if="userdata.role=='ADMIN'">
             <hr>
-                <button v-on:click="reload" class="button">reload</button>
                 <button v-on:click="plus1" class="button">+1 minuut</button>
+                <br>
                 <button v-on:click="min1" class="button">-1 minuut</button>
+                <br>
+                <button v-on:click="reload" class="button">reload</button>
        </span>
 
             <br>
