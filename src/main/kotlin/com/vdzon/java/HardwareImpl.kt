@@ -89,6 +89,7 @@ class HardwareImpl : Hardware {
     }
 
     override fun updateAuto(manual: Boolean) {
+        println("impl: manual = $manual")
         displayController.displayData.manual = manual
         displayThread?.interrupt()
     }
@@ -134,9 +135,19 @@ class HardwareImpl : Hardware {
         this.klepListener = klepListener
     }
 
+    override fun getDisplayData(): DisplayData = displayController.displayData
+
+    override fun start(){
+        val switchState = switchButton.isHigh
+        println(switchState)
+        if (switchButton.isHigh) switchOff() else switchOn()
+    }
+
+
     private fun switchChanged(state: DigitalState?) {
         if (state === DigitalState.LOW) switchOn() else switchOff()
     }
+
 
 
     fun initHardware() {
@@ -327,7 +338,7 @@ class HardwareImpl : Hardware {
 
 }
 
-class DisplayData(
+data class DisplayData(
     var manual: Boolean = false,
     var ip: String = "",
     var klepState: KlepState = KlepState.OPEN,

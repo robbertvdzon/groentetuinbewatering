@@ -9,6 +9,7 @@ object Main {
         val remote = System.getenv()["remote"] == "true"
         val hardware = if (remote) HardwareMock() else HardwareImpl()
         val controller = Controller(hardware)
+        hardware.start()
 
         controller.setIp(getCurrentIPv4Address())
         MainWeb(controller).start()

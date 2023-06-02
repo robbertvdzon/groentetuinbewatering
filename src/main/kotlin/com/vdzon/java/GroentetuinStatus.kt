@@ -1,9 +1,10 @@
 package com.vdzon.java
 
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class GroentetuinStatus(
-    val klep: String,
-    val gisteren: String
+    val displayData: DisplayData,
+    val lastTimeOpen: String = "??",
+    val rainYesterday: String = "??",
+    val rainToday: String = "??",
+    val rainTomorrow: String = "??"
 )

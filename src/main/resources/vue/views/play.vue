@@ -5,17 +5,46 @@
 
 
             <div class="headerBorder">
-                <table width=100%>
-                    <tr height="50px">
-                        <td>&nbsp;
-                            Usermode:{{ userdata.role }}<br>
-                            Sproeier status: {{ userdata.role }} <br>
-                            Laatste keer gesproeied: {{ tuin.klep }} <br>
-                            Regenval gisteren: {{ tuin.gisteren }} <br>
-                            Regenval eergisteren: ?? <br>
-                            Verwachting morgen: ?? <br>
-                            Planning sproeier: ??
-                        </td>
+                <table width=300px>
+                    <tr>
+                        <td>Usermode:</td>
+                        <td>{{ userdata.role }}</td>
+                    </tr>
+                    <tr>
+                        <td>Laatste keer gesproeied:</td>
+                        <td>{{ tuin.lastTimeOpen }}</td>
+                    </tr>
+                    <tr>
+                        <td>Regenval gisteren:</td>
+                        <td>{{ tuin.rainYesterday }}</td>
+                    </tr>
+                    <tr>
+                        <td>Regenval vandaag:</td>
+                        <td>{{ tuin.rainToday }}</td>
+                    </tr>
+                    <tr>
+                        <td>Verwachting morgen:</td>
+                        <td>{{ tuin.rainTomorrow }}</td>
+                    </tr>
+                    <tr>
+                        <td>Planning sproeier:</td>
+                        <td>{{ tuin.displayData.plannedTime }}</td>
+                    </tr>
+                    <tr>
+                        <td>Timer sproeier:</td>
+                        <td>{{ tuin.displayData.time }}</td>
+                    </tr>
+                    <tr>
+                        <td>KlepState:</td>
+                        <td>{{ tuin.displayData.klepState }}</td>
+                    </tr>
+                    <tr>
+                        <td>Ip:</td>
+                        <td>{{ tuin.displayData.ip }}</td>
+                    </tr>
+                    <tr>
+                        <td>Manual:</td>
+                        <td>{{ tuin.displayData.manual }}</td>
                     </tr>
                 </table>
             </div>
@@ -45,8 +74,9 @@
             -->
             <span v-if="userdata.role=='ADMIN'">
             <hr>
-                <button v-on:click="plus5" class="button">+5 minuten</button>
-                <button v-on:click="min5" class="button">-5 minuten</button>
+                <button v-on:click="reload" class="button">reload</button>
+                <button v-on:click="plus1" class="button">+1 minuut</button>
+                <button v-on:click="min1" class="button">-1 minuut</button>
        </span>
 
             <br>
@@ -122,14 +152,20 @@ Vue.component("play", {
         updateTuin: function (newTuin) {
             this.tuin = newTuin;
         },
-        plus5: function () {
-            fetch(`/api/game/plus5`)
+        reload: function () {
+            fetch(`/api/game/reload`)
                 .then(res => res.text())
                 .then(text => this.updateTuin(JSON.parse(text)))
                 .catch(() => alert("Error"));
         },
-        min5: function () {
-            fetch(`/api/game/min5`)
+        plus1: function () {
+            fetch(`/api/game/plus1`)
+                .then(res => res.text())
+                .then(text => this.updateTuin(JSON.parse(text)))
+                .catch(() => alert("Error"));
+        },
+        min1: function () {
+            fetch(`/api/game/min1`)
                 .then(res => res.text())
                 .then(text => this.updateTuin(JSON.parse(text)))
                 .catch(() => alert("Error"));

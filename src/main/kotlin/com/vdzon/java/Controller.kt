@@ -24,6 +24,10 @@ class Controller(
 
     }
 
+    fun getDisplayData(): DisplayData {
+        return hardware.getDisplayData()
+    }
+
     fun setIp(ip: String) {
         hardware.updateIP(ip)
     }
@@ -74,11 +78,13 @@ class Controller(
     }
 
     override fun switchOn() {
+        println("controller: switch on")
         manual = true
         hardware.updateAuto(manual)
     }
 
     override fun switchOff() {
+        println("controller: switch off")
         manual = false
         hardware.updateAuto(manual)
     }

@@ -1,6 +1,8 @@
 package com.vdzon.java
 
 interface Hardware {
+    fun start()
+
     fun klepOpen()
     fun klepClose()
 
@@ -17,6 +19,7 @@ interface Hardware {
     fun registerEncoderListener(encoderListener: EncoderListener)
     fun registerSwitchListener(switchListener: SwitchListener)
     fun registerKlepListener(klepListener: KlepListener)
+    fun getDisplayData(): DisplayData
 }
 
 interface SwitchListener{

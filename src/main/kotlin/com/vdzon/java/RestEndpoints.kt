@@ -9,26 +9,37 @@ class RestEndpoints(val controller: Controller) {
         app["/api/game/load", { ctx: Context? ->
             load(ctx)
         }]
-        app["/api/game/plus5", { ctx: Context? ->
-            plus5(ctx)
+        app["/api/game/plus1", { ctx: Context? ->
+            plus1(ctx)
         }]
-        app["/api/game/min5", { ctx: Context? ->
-            min5(ctx)
+        app["/api/game/min1", { ctx: Context? ->
+            min1(ctx)
+        }]
+        app["/api/game/reload", { ctx: Context? ->
+            reload(ctx)
         }]
     }
 
-    private fun min5(ctx: Context?) {
-        controller.closeKlep()
-        ctx?.json(GroentetuinStatus("klep status", "min 5"))
+    private fun reload(ctx: Context?) {
+        val displayData = controller.getDisplayData()
+        ctx?.json(GroentetuinStatus(displayData))
     }
 
-    private fun plus5(ctx: Context?) {
-        controller.openKlep()
-        ctx?.json(GroentetuinStatus("klep status", "plus 5"))
+    private fun min1(ctx: Context?) {
+        controller.encoderDown()
+        val displayData = controller.getDisplayData()
+        ctx?.json(GroentetuinStatus(displayData))
+    }
+
+    private fun plus1(ctx: Context?) {
+        controller.encoderUp()
+        val displayData = controller.getDisplayData()
+        ctx?.json(GroentetuinStatus(displayData))
     }
 
     private fun load(ctx: Context?) {
-        ctx?.json(GroentetuinStatus("klep status", "veel regen"))
+        val displayData = controller.getDisplayData()
+        ctx?.json(GroentetuinStatus(displayData))
     }
 
 }
