@@ -1,7 +1,9 @@
 package com.vdzon.java
 
 import java.time.LocalDateTime
+import java.time.LocalTime
 import kotlin.concurrent.thread
+import java.time.Duration
 
 class Controller(
     val hardware: Hardware
@@ -14,6 +16,7 @@ class Controller(
     init {
         hardware.registerEncoderListener(this)
         hardware.registerSwitchListener(this)
+        hardware.registerKlepListener(this)
         thread(start = true) {
             klepThreadThread()
         }
@@ -56,22 +59,18 @@ class Controller(
 
     override fun encoderUp() {
         if (closeTime.isBefore(LocalDateTime.now())) {
-            closeTime = LocalDateTime.now().plusSeconds(10)
+            closeTime = LocalDateTime.now().plusMinutes(1)
         } else {
-            closeTime = closeTime.plusSeconds(10)
+            closeTime = closeTime.plusMinutes(1)
         }
         val time = closeTime.toString().substring(11, 16)
-        hardware.updateTime(time)
+        displayTime()
     }
 
     override fun encoderDown() {
-        if (closeTime.isAfter(LocalDateTime.now())) {
-            closeTime = LocalDateTime.now().minusSeconds(10)
-        } else {
-            closeTime = closeTime.minusSeconds(10)
-        }
+        closeTime = closeTime.minusMinutes(1)
         val time = closeTime.toString().substring(11, 16)
-        hardware.updateTime(time)
+        displayTime()
     }
 
     override fun switchOn() {
@@ -105,15 +104,30 @@ class Controller(
         if (klepState== KlepState.CLOSED && closeTimeInFuture) {
             hardware.klepOpen()
         }
+
+        displayTime()
+    }
+
+    private fun displayTime() {
+        val currentTime = LocalDateTime.now()
+        val secondsRemainingUntilClose = currentTime.until(closeTime, java.time.temporal.ChronoUnit.SECONDS)
+        val closeTimeInFuture = secondsRemainingUntilClose>0
         if (closeTimeInFuture){
-            hardware.updateTime("$secondsRemainingUntilClose seconds")
+            val duration: Duration = Duration.between(currentTime, closeTime)
+            val hours = duration.toHours()
+            val minutes = duration.toMinutesPart()
+            val seconds = duration.toSecondsPart()
+
+            val formattedDuration = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+
+            hardware.updateTime("$formattedDuration")
         }else{
             hardware.updateTime("-")
         }
-
     }
 
-    private fun sleep() {
+
+        private fun sleep() {
         try {
             Thread.sleep(1000)
         } catch (e: InterruptedException) {

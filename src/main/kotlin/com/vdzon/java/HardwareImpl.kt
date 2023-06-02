@@ -34,7 +34,6 @@ class HardwareImpl : Hardware {
     }
 
     var displayThread: Thread? = null
-    var klepState: String = "?"
 
     private var encoderListener: EncoderListener? = null
     private var switchListener: SwitchListener? = null
@@ -58,9 +57,7 @@ class HardwareImpl : Hardware {
             klepListener?.klepOpening()
             richting.high()
             aanUit.high()
-            klepState = "opening"
             Thread.sleep(3000)
-            klepState = "open"
             aanUit.low()
             klepListener?.klepOpen()
             println("klep opened")
@@ -73,9 +70,7 @@ class HardwareImpl : Hardware {
             klepListener?.klepClosing()
             richting.low()
             aanUit.high()
-            klepState = "closing"
             Thread.sleep(3000)
-            klepState = "closed"
             aanUit.low()
             klepListener?.klepClosed()
             println("klep closed")
@@ -185,17 +180,27 @@ class HardwareImpl : Hardware {
         }
 
         var encoderValue = 0
+        var lastWholeValue = 0
 
         fun encoderMicroUp() {
             encoderValue++
-            if (encoderValue % 4 == 0) {
+            println("encoderValue: $encoderValue")
+            val wholeValue = encoderValue / 4
+            if (wholeValue != lastWholeValue) {
+                lastWholeValue = wholeValue
+                println("call encoderUp")
                 encoderUp()
+
             }
         }
 
         fun encoderMicroDown() {
             encoderValue--
-            if (encoderValue % 4 == 0) {
+            println("encoderValue: $encoderValue")
+            val wholeValue = encoderValue / 4
+            if (wholeValue != lastWholeValue) {
+                lastWholeValue = wholeValue
+                println("call encoderDown")
                 encoderDown()
             }
         }
@@ -337,17 +342,21 @@ class DisplayController(val lcd: LcdDisplay) {
     fun displayThread() {
         lcd.setDisplayBacklight(true)
         lcd.clearDisplay()
-        lcd.displayText("ip: ${displayData.ip}", 1)
+        updateDisplay()
+        while (true) {
+            sleep()
+            updateDisplay()
+        }
+    }
+
+    private fun updateDisplay() {
+
+
+
+        lcd.displayText("${displayData.ip}", 1)
         lcd.displayText("klep: ${displayData.klepState}", 2)
         lcd.displayText("manual: ${displayData.manual}", 3)
         lcd.displayText("time: ${displayData.time}", 4)
-        while (true) {
-            sleep()
-            lcd.displayText("ip: ${displayData.ip}", 1)
-            lcd.displayText("klep: ${displayData.klepState}", 2)
-            lcd.displayText("manual: ${displayData.manual}", 3)
-            lcd.displayText("time: ${displayData.time}", 4)
-        }
     }
 
     private fun sleep() {
