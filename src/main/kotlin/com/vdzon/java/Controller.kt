@@ -38,22 +38,22 @@ class Controller(
 
     override fun klepOpening() {
         klepState= KlepState.OPENING
-        hardware.updateKlepState("opening")
+        hardware.updateKlepState(KlepState.OPENING)
     }
 
     override fun klepOpen() {
         klepState= KlepState.OPEN
-        hardware.updateKlepState("open")
+        hardware.updateKlepState(KlepState.OPEN)
     }
 
     override fun klepClosing() {
         klepState= KlepState.CLOSING
-        hardware.updateKlepState("closing")
+        hardware.updateKlepState(KlepState.CLOSING)
     }
 
     override fun klepClosed() {
         klepState= KlepState.CLOSED
-        hardware.updateKlepState("closed")
+        hardware.updateKlepState(KlepState.CLOSED)
     }
 
 
@@ -122,7 +122,7 @@ class Controller(
 
             hardware.updateTime("$formattedDuration")
         }else{
-            hardware.updateTime("-")
+            hardware.updateTime("")
         }
     }
 
@@ -139,6 +139,6 @@ class Controller(
 
 
 
-enum class KlepState {
-    OPEN, CLOSED, OPENING, CLOSING
+enum class KlepState(val text: String) {
+    OPEN ("Klep open"), CLOSED ("Klep dicht"), OPENING ("Openen"), CLOSING ("Sluiten")
 }

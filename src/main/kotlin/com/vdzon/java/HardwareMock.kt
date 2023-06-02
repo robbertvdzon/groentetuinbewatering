@@ -26,7 +26,7 @@ class HardwareMock : Hardware {
     override fun updateIP(ip: String) {
         println("ip: $ip")
     }
-    override fun updateKlepState(klepState: String){
+    override fun updateKlepState(klepState: KlepState){
         println("klepState: $klepState")
     }
 

@@ -7,7 +7,7 @@ interface Hardware {
     fun updateTime(time: String)
     fun updateAuto(manual: Boolean)
     fun updateIP(ip: String)
-    fun updateKlepState(klepState: String)
+    fun updateKlepState(klepState: KlepState)
 
     fun encoderUp()
     fun encoderDown()
