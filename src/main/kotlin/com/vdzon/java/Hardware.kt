@@ -5,6 +5,7 @@ interface Hardware {
     fun klepClose()
 
     fun updateTime(time: String)
+    fun updatePlannedTime(plannedTime: String)
     fun updateAuto(manual: Boolean)
     fun updateIP(ip: String)
     fun updateKlepState(klepState: KlepState)

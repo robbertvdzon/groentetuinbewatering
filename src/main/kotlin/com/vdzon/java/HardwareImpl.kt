@@ -83,6 +83,11 @@ class HardwareImpl : Hardware {
         displayThread?.interrupt()
     }
 
+    override fun updatePlannedTime(plannedTime: String){
+        displayController.displayData.plannedTime = plannedTime
+        displayThread?.interrupt()
+    }
+
     override fun updateAuto(manual: Boolean) {
         displayController.displayData.manual = manual
         displayThread?.interrupt()
@@ -326,7 +331,8 @@ class DisplayData(
     var manual: Boolean = false,
     var ip: String = "",
     var klepState: KlepState = KlepState.OPEN,
-    var time: String = ""
+    var time: String = "",
+    var plannedTime: String = ""
 
 )
 
@@ -361,11 +367,14 @@ class DisplayController(val lcd: LcdDisplay) {
         lcd.displayText("${displayData.ip}", 1)
         lcd.displayText("${displayData.klepState.text}", 2)
         lcd.displayText("$state", 3)
-        if (displayData.time.isEmpty()){
-            lcd.displayText("Geen planning", 4)
-        }
-        else {
+        if (displayData.time.isNotEmpty()) {
             lcd.displayText("Timer: ${displayData.time}", 4)
+        }
+        else if (displayData.plannedTime.isNotEmpty()) {
+            lcd.displayText("Planned: ${displayData.plannedTime}", 4)
+        }
+        else{
+            lcd.displayText("Geen planning", 4)
         }
     }
 

@@ -18,6 +18,9 @@ class HardwareMock : Hardware {
     override fun updateTime(time: String) {
         println("time: $time")
     }
+    override fun updatePlannedTime(plannedTime: String){
+        println("plannedTime: $plannedTime")
+    }
 
     override fun updateAuto(manual: Boolean) {
         println("manual: $manual")
