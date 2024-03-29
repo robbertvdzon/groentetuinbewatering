@@ -49,13 +49,24 @@
                 </table>
             </div>
 
+            <br>
+            <span v-if="userdata.role!='ADMIN'">
+                <button type="submit" v-on:click="login" class="button">Login</button>
+            </span>
+
+            <span v-if="userdata.role=='ADMIN'">
+            <hr>
+                <button v-on:click="plus1" class="button">+1 minuut</button>
+                <br><br>
+                <button v-on:click="min1" class="button">-1 minuut</button>
+                <br><br>
+                <button v-on:click="reload" class="button">reload</button>
+                <br><br>
+
             <div class="headerBorder">
                 <table width=100%>
                     <tr height="50px">
                         <td>&nbsp;
-              <span v-if="userdata.role!='ADMIN'">
-                <button type="submit" v-on:click="login" class="button">Login</button>
-              </span>
               <span v-if="userdata.role=='ADMIN'">
                 <button v-on:click="logout" class="button">Logout</button>
               </span>
@@ -64,14 +75,7 @@
                 </table>
 
             </div>
-            <br>
-            <span v-if="userdata.role=='ADMIN'">
-            <hr>
-                <button v-on:click="plus1" class="button">+1 minuut</button>
-                <br>
-                <button v-on:click="min1" class="button">-1 minuut</button>
-                <br>
-                <button v-on:click="reload" class="button">reload</button>
+
        </span>
 
             <br>
