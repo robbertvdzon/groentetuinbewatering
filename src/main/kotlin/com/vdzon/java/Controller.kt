@@ -61,18 +61,24 @@ class Controller(
     }
 
 
-    override fun encoderUp() {
+    override fun encoderUp(amount: Int) {
         if (closeTime.isBefore(LocalDateTime.now())) {
-            closeTime = LocalDateTime.now().plusMinutes(1)
+            closeTime = LocalDateTime.now().plusMinutes(amount.toLong())
         } else {
-            closeTime = closeTime.plusMinutes(1)
+            closeTime = closeTime.plusMinutes(amount.toLong())
         }
         val time = closeTime.toString().substring(11, 16)
         displayTime()
     }
 
-    override fun encoderDown() {
-        closeTime = closeTime.minusMinutes(1)
+    override fun dicht() {
+        closeTime = LocalDateTime.now()
+        val time = closeTime.toString().substring(11, 16)
+        displayTime()
+    }
+
+    override fun encoderDown(amount: Int) {
+        closeTime = closeTime.minusMinutes(amount.toLong())
         val time = closeTime.toString().substring(11, 16)
         displayTime()
     }

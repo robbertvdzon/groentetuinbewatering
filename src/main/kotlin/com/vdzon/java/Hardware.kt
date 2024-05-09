@@ -28,8 +28,9 @@ interface SwitchListener{
 }
 
 interface EncoderListener{
-    fun encoderUp()
-    fun encoderDown()
+    fun encoderUp(amount: Int = 1)
+    fun encoderDown(amount: Int = 1)
+    fun dicht()
 }
 
 interface KlepListener{

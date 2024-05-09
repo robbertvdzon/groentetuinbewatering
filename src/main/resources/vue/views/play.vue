@@ -7,74 +7,64 @@
             <div class="headerBorder">
                 <table width=300px>
                     <tr>
-                        <td>Usermode:</td>
+                        <td>Timer start:</td>
+                        <td>
+                          <input type="text" v-model="userdata.role" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Duration:</td>
                         <td>{{ userdata.role }}</td>
                     </tr>
                     <tr>
-                        <td>Laatste keer gesproeied:</td>
-                        <td>{{ tuin.lastTimeOpen }}</td>
+                        <td>Enable timer:</td>
+                        <td>{{ userdata.role }}</td>
                     </tr>
-                    <tr>
-                        <td>Regenval gisteren:</td>
-                        <td>{{ tuin.rainYesterday }}</td>
-                    </tr>
-                    <tr>
-                        <td>Regenval vandaag:</td>
-                        <td>{{ tuin.rainToday }}</td>
-                    </tr>
-                    <tr>
-                        <td>Verwachting morgen:</td>
-                        <td>{{ tuin.rainTomorrow }}</td>
-                    </tr>
-                    <tr>
-                        <td>Planning sproeier:</td>
-                        <td>{{ tuin.displayData.plannedTime }}</td>
-                    </tr>
-                    <tr>
-                        <td>Timer sproeier:</td>
-                        <td>{{ tuin.displayData.time }}</td>
-                    </tr>
-                    <tr>
-                        <td>KlepState:</td>
-                        <td>{{ tuin.displayData.klepState }}</td>
-                    </tr>
-                    <tr>
-                        <td>Ip:</td>
-                        <td>{{ tuin.displayData.ip }}</td>
-                    </tr>
-                    <tr>
-                        <td>Manual:</td>
-                        <td>{{ tuin.displayData.manual }}</td>
-                    </tr>
+                  <tr>
+                    <td colspan="2">
+                    <button v-on:click="dicht" class="button">Save</button>
+                    </td>
+                  </tr>
                 </table>
             </div>
+          <br>
+
+
+
+          <div class="headerBorder">
+            <table width=300px>
+              <tr>
+                <td>Timer sproeier:</td>
+                <td>{{ tuin.displayData.time }}</td>
+              </tr>
+              <tr>
+                <td>KlepState:</td>
+                <td>{{ tuin.displayData.klepState }}</td>
+              </tr>
+              <tr>
+                <td>Ip:</td>
+                <td>{{ tuin.displayData.ip }}</td>
+              </tr>
+            </table>
+          </div>
+
 
             <br>
             <span v-if="userdata.role!='ADMIN'">
-                <button type="submit" v-on:click="login" class="button">Login</button>
+                <button type="submit" v-on:click="login" class="button">Inloggen</button>
             </span>
 
             <span v-if="userdata.role=='ADMIN'">
             <hr>
-                <button v-on:click="plus1" class="button">+1 minuut</button>
-                <br><br>
-                <button v-on:click="min1" class="button">-1 minuut</button>
-                <br><br>
-                <button v-on:click="reload" class="button">reload</button>
-                <br><br>
-
-            <div class="headerBorder">
-                <table width=100%>
-                    <tr height="50px">
-                        <td>&nbsp;
-              <span v-if="userdata.role=='ADMIN'">
-                <button v-on:click="logout" class="button">Logout</button>
-              </span>
-                        </td>
-                    </tr>
-                </table>
-
-            </div>
+                <button v-on:click="min10" class="button">-10</button>
+                <button v-on:click="min1" class="button">-1</button>
+                <button v-on:click="plus1" class="button">+1</button>
+                <button v-on:click="plus10" class="button">+10</button>
+              <br>
+              <br>
+                <button v-on:click="dicht" class="button">Dicht</button>
+                <button v-on:click="reload" class="button">Reload</button>
+                <button v-on:click="logout" class="button">Uitloggen</button>
 
        </span>
 
@@ -163,8 +153,26 @@ Vue.component("play", {
                 .then(text => this.updateTuin(JSON.parse(text)))
                 .catch(() => alert("Error"));
         },
+        plus10: function () {
+            fetch(`/api/game/plus10`)
+                .then(res => res.text())
+                .then(text => this.updateTuin(JSON.parse(text)))
+                .catch(() => alert("Error"));
+        },
         min1: function () {
             fetch(`/api/game/min1`)
+                .then(res => res.text())
+                .then(text => this.updateTuin(JSON.parse(text)))
+                .catch(() => alert("Error"));
+        },
+        min10: function () {
+            fetch(`/api/game/min10`)
+                .then(res => res.text())
+                .then(text => this.updateTuin(JSON.parse(text)))
+                .catch(() => alert("Error"));
+        },
+        dicht: function () {
+            fetch(`/api/game/dicht`)
                 .then(res => res.text())
                 .then(text => this.updateTuin(JSON.parse(text)))
                 .catch(() => alert("Error"));
@@ -185,7 +193,8 @@ $(document).ready(function () {
 <style scoped>
 .headerBorder {
     color: white;
-    background-color: #663d00;
+    background-color: #163d00;
+    font-size: 13px;
 }
 
 .schaakmat {
