@@ -206,7 +206,7 @@ class LcdDisplay : Component {
      * @param charvalue of the char that is written
      */
     fun writeCharacter(charvalue: Char) {
-        writeSplitCommand(charvalue.code.toByte(), Rs)
+        writeSplitCommand(charvalue.toByte(), Rs)
     }
 
     /**
@@ -218,7 +218,7 @@ class LcdDisplay : Component {
      */
     fun writeCharacter(charvalue: Char, column: Int, line: Int) {
         setCursorToPosition(column, line)
-        writeSplitCommand(charvalue.code.toByte(), Rs)
+        writeSplitCommand(charvalue.toByte(), Rs)
     }
 
     /**
