@@ -32,7 +32,7 @@ object Main {
         firebaseListener.processCommands(dbFirestore)
 
         controller.setIp(getCurrentIPv4Address())
-        MainWeb(controller).start()
+//        MainWeb(controller).start()
 
     }
 
