@@ -52,19 +52,15 @@ object Main {
         thread {
             while (true) {
                 val ip = getCurrentIPv4Address()
-                println("TEST 2 $ip")
                 if (ip != currentIpAdress) {
-                    println("new IP: $ip (previous: $currentIpAdress)")
                     controller.setIp(ip)
                     currentIpAdress = ip
                 }
                 if (ip == "not found"){
-                    println("sleep 5")
-                    Thread.sleep(5 * 1000)// check every5 seond minute when ip was already found found
+                    Thread.sleep(5 * 1000)// check every5 seond minute when ip was not found before
                 }
                 else{
-                    println("sleep 60")
-                    Thread.sleep(60 * 1000)// check every minute when ip was already found found
+                    Thread.sleep(60 * 1000)// check every minute when ip was already found
                 }
             }
 
