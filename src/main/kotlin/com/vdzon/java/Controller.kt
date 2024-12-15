@@ -1,12 +1,14 @@
 package com.vdzon.java
 
+import com.vdzon.java.common.FirebaseProducer
 import java.time.LocalDateTime
-import java.time.LocalTime
 import kotlin.concurrent.thread
 import java.time.Duration
 
 class Controller(
-    val hardware: Hardware
+    val hardware: Hardware,
+    val firebaseProducer: FirebaseProducer
+
 ) : EncoderListener, SwitchListener, KlepListener {
 
     private var manual: Boolean = false
@@ -43,21 +45,26 @@ class Controller(
     override fun klepOpening() {
         klepState= KlepState.OPENING
         hardware.updateKlepState(KlepState.OPENING)
+        firebaseProducer.setStatus("Opening")
     }
 
     override fun klepOpen() {
         klepState= KlepState.OPEN
         hardware.updateKlepState(KlepState.OPEN)
+        firebaseProducer.setStatus("Open")
     }
 
     override fun klepClosing() {
         klepState= KlepState.CLOSING
         hardware.updateKlepState(KlepState.CLOSING)
+        firebaseProducer.setStatus("Closing")
     }
 
     override fun klepClosed() {
         klepState= KlepState.CLOSED
         hardware.updateKlepState(KlepState.CLOSED)
+        firebaseProducer.setStatus("Closed")
+
     }
 
 
@@ -133,8 +140,10 @@ class Controller(
             val formattedDuration = String.format("%02d:%02d:%02d", hours, minutes, seconds)
 
             hardware.updateTime("$formattedDuration")
+            firebaseProducer.setTime(formattedDuration)
         }else{
             hardware.updateTime("")
+            firebaseProducer.setTime("")
         }
     }
 

@@ -486,6 +486,6 @@ class LcdDisplay : Component {
          * On the PI, you can look it up with the Command 'sudo i2cdetect -y 1'
          */
         private const val DEFAULT_BUS = 0x1
-        private const val DEFAULT_DEVICE = 0x3F
+        private const val DEFAULT_DEVICE = 0x27
     }
 }

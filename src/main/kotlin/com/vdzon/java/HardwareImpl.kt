@@ -36,45 +36,45 @@ class HardwareImpl : Hardware {
     var displayThread: Thread? = null
 
     private var encoderListener: EncoderListener? = null
-    private var switchListener: SwitchListener? = null
-    private var klepListener: KlepListener? = null
+//    private var switchListener: SwitchListener? = null
+//    private var klepListener: KlepListener? = null
 
     lateinit var pi4j: Context
     lateinit var displayController: DisplayController
-    lateinit var richting: DigitalOutput
-    lateinit var aanUit: DigitalOutput
-    lateinit var switchButton: DigitalInput
-    lateinit var encoder1: DigitalInput
-    lateinit var encoder2: DigitalInput
+//    lateinit var richting: DigitalOutput
+//    lateinit var aanUit: DigitalOutput
+//    lateinit var switchButton: DigitalInput
+//    lateinit var encoder1: DigitalInput
+//    lateinit var encoder2: DigitalInput
 
     init {
         initHardware()
     }
 
     override fun klepOpen() {
-        Thread {
-            println("klep open")
-            klepListener?.klepOpening()
-            richting.high()
-            aanUit.high()
-            Thread.sleep(3000)
-            aanUit.low()
-            klepListener?.klepOpen()
-            println("klep opened")
-        }.start()
+//        Thread {
+//            println("klep open")
+//            klepListener?.klepOpening()
+//            richting.high()
+//            aanUit.high()
+//            Thread.sleep(3000)
+//            aanUit.low()
+//            klepListener?.klepOpen()
+//            println("klep opened")
+//        }.start()
     }
 
     override fun klepClose() {
-        Thread {
-            println("klep close")
-            klepListener?.klepClosing()
-            richting.low()
-            aanUit.high()
-            Thread.sleep(3000)
-            aanUit.low()
-            klepListener?.klepClosed()
-            println("klep closed")
-        }.start()
+//        Thread {
+//            println("klep close")
+//            klepListener?.klepClosing()
+//            richting.low()
+//            aanUit.high()
+//            Thread.sleep(3000)
+//            aanUit.low()
+//            klepListener?.klepClosed()
+//            println("klep closed")
+//        }.start()
 
     }
 
@@ -95,6 +95,7 @@ class HardwareImpl : Hardware {
     }
 
     override fun updateIP(ip: String) {
+        println("IP adress: $ip")
         displayController.displayData.ip = ip
         displayThread?.interrupt()
     }
@@ -115,11 +116,11 @@ class HardwareImpl : Hardware {
     }
 
     override fun switchOn() {
-        switchListener?.switchOn()
+//        switchListener?.switchOn()
     }
 
     override fun switchOff() {
-        switchListener?.switchOff()
+//        switchListener?.switchOff()
     }
 
 
@@ -128,19 +129,19 @@ class HardwareImpl : Hardware {
     }
 
     override fun registerSwitchListener(switchListener: SwitchListener) {
-        this.switchListener = switchListener
+//        this.switchListener = switchListener
     }
 
     override fun registerKlepListener(klepListener: KlepListener) {
-        this.klepListener = klepListener
+//        this.klepListener = klepListener
     }
 
     override fun getDisplayData(): DisplayData = displayController.displayData
 
     override fun start(){
-        val switchState = switchButton.isHigh
-        println(switchState)
-        if (switchButton.isHigh) switchOff() else switchOn()
+//        val switchState = switchButton.isHigh
+//        println(switchState)
+//        if (switchButton.isHigh) switchOff() else switchOn()
     }
 
 
@@ -158,24 +159,24 @@ class HardwareImpl : Hardware {
         displayThread = displayController.startThread()
         printInfo()
 
-        val richtingConfig = getRichtingConfig()
-        val aanUitConfig = getAanUitConfig()
-        val switchButtonConfig = getButtonConfig()
-        val encoder1Config = getEncoder1Config()
-        val encoder2Config = encoder2Config()
-
-        richting = pi4j.create(richtingConfig)
-        aanUit = pi4j.create(aanUitConfig)
-        switchButton = pi4j.create(switchButtonConfig)
-        encoder1 = pi4j.create(encoder1Config)
-        encoder2 = pi4j.create(encoder2Config)
-
+//        val richtingConfig = getRichtingConfig()
+//        val aanUitConfig = getAanUitConfig()
+//        val switchButtonConfig = getButtonConfig()
+//        val encoder1Config = getEncoder1Config()
+//        val encoder2Config = encoder2Config()
+//
+//        richting = pi4j.create(richtingConfig)
+//        aanUit = pi4j.create(aanUitConfig)
+//        switchButton = pi4j.create(switchButtonConfig)
+//        encoder1 = pi4j.create(encoder1Config)
+//        encoder2 = pi4j.create(encoder2Config)
+//
         class SwitchButtonListener : DigitalStateChangeListener {
             override fun onDigitalStateChange(p0: DigitalStateChangeEvent<out Digital<*, *, *>>?) {
                 switchChanged(p0?.state())
             }
         }
-        switchButton.addListener(SwitchButtonListener())
+//        switchButton.addListener(SwitchButtonListener())
 
         var byteCode: Byte = 0b00000000
         var newByteCode: Byte = 0b00000000
@@ -246,7 +247,7 @@ class HardwareImpl : Hardware {
                 }
             }
         }
-        encoder1.addListener(Encoder1Listener())
+//        encoder1.addListener(Encoder1Listener())
 
         class Encoder2Listener : DigitalStateChangeListener {
             override fun onDigitalStateChange(p0: DigitalStateChangeEvent<out Digital<*, *, *>>?) {
@@ -260,7 +261,7 @@ class HardwareImpl : Hardware {
                 }
             }
         }
-        encoder2.addListener(Encoder2Listener())
+//        encoder2.addListener(Encoder2Listener())
     }
 
     private fun encoder2Config(): DigitalInputConfigBuilder? = DigitalInput.newConfigBuilder(pi4j)
